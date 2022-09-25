@@ -1,49 +1,84 @@
 import React from "react";
 import { Formik } from "formik";
-import { Button, Input } from "@chakra-ui/react";
+import {
+  Button,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { supabase } from "../utils/supabaseClient";
 
 const SignupForm: React.FC = () => {
-  const signInWithEmail = async (values: any) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const signUpWithEmail = async (values: {
+    email: string;
+    password: string;
+  }) => {
     // @ts-ignore
-    // const { user, error } = await supabase.auth.signIn({
-    //   email: "example@email.com",
-    //   password: "example-password",
-    // });
-    console.log(values);
+    const { user, session, error } = await supabase.auth.signUp({
+      email: values.email,
+      password: values.password,
+    });
   };
 
   return (
-    <div>
-      <h1>Signup Form</h1>
-      <Formik
-        initialValues={{
-          email: "",
-          password: "",
+    <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Registro</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Formik
+              initialValues={{
+                email: "",
+                password: "",
+              }}
+              onSubmit={signUpWithEmail}
+            >
+              {({ handleSubmit, handleChange, handleBlur, values }) => (
+                <form onSubmit={handleSubmit}>
+                  <Input
+                    type="text"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.email}
+                    name="email"
+                  />
+                  <Input
+                    type="password"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.password}
+                    name="password"
+                  />
+                  <Button type="submit">Registrar</Button>
+                </form>
+              )}
+            </Formik>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <Button
+        display={{ base: "none", md: "inline-flex" }}
+        fontSize={"sm"}
+        fontWeight={600}
+        color={"white"}
+        bg={"pink.400"}
+        _hover={{
+          bg: "pink.300",
         }}
-        onSubmit={signInWithEmail}
+        onClick={onOpen}
       >
-        {({ handleSubmit, handleChange, handleBlur, values }) => (
-          <form onSubmit={handleSubmit}>
-            <Input
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.email}
-              name="email"
-            />
-            <Input
-              type="password"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.password}
-              name="password"
-            />
-            <Button type="submit">Submit</Button>
-          </form>
-        )}
-      </Formik>
-    </div>
+        Registro
+      </Button>
+    </>
   );
 };
 

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Box,
   Flex,
@@ -21,8 +22,16 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from "@chakra-ui/icons";
+import SignupForm from "./SignupForm";
+import LoginForm from "./LoginForm";
+import { Session } from "@supabase/supabase-js";
+import Signout from "./Signout";
 
-export default function Nav() {
+interface NavType {
+  session: Session | null;
+}
+
+const Nav: React.FC<NavType> = ({ session }) => {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
@@ -72,27 +81,16 @@ export default function Nav() {
           direction={"row"}
           spacing={6}
         >
-          <Button
-            as={"a"}
-            fontSize={"sm"}
-            fontWeight={400}
-            variant={"link"}
-            href={"#"}
-          >
-            Sign In
-          </Button>
-          <Button
-            display={{ base: "none", md: "inline-flex" }}
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bg={"pink.400"}
-            _hover={{
-              bg: "pink.300",
-            }}
-          >
-            Sign Up
-          </Button>
+          {session ? (
+            <>
+              <Signout />
+            </>
+          ) : (
+            <>
+              <LoginForm />
+              <SignupForm />
+            </>
+          )}
         </Stack>
       </Flex>
 
@@ -101,7 +99,7 @@ export default function Nav() {
       </Collapse>
     </Box>
   );
-}
+};
 
 const DesktopNav = () => {
   const linkColor = useColorModeValue("gray.600", "gray.200");
@@ -303,3 +301,5 @@ const NAV_ITEMS: Array<NavItem> = [
     href: "#",
   },
 ];
+
+export default Nav;
