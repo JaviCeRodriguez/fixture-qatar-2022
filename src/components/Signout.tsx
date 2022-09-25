@@ -12,10 +12,11 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { supabase } from "../utils/supabaseClient";
+import { useAuth } from "../contexts/AuthContext";
 
 const Signout: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { signOut } = useAuth();
 
   return (
     <>
@@ -26,14 +27,7 @@ const Signout: React.FC = () => {
           <ModalCloseButton />
           <ModalBody>¿Está seguro de cerrar sesión? 👀</ModalBody>
           <ModalFooter>
-            <Button
-              fontSize={"sm"}
-              fontWeight={400}
-              onClick={async () => {
-                await supabase.auth.signOut();
-                onClose();
-              }}
-            >
+            <Button fontSize={"sm"} fontWeight={400} onClick={signOut}>
               Si
             </Button>
             <Button

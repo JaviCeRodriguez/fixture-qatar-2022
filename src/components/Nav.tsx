@@ -26,13 +26,11 @@ import SignupForm from "./SignupForm";
 import LoginForm from "./LoginForm";
 import { Session } from "@supabase/supabase-js";
 import Signout from "./Signout";
+import { useAuth } from "../contexts/AuthContext";
 
-interface NavType {
-  session: Session | null;
-}
-
-const Nav: React.FC<NavType> = ({ session }) => {
+const Nav: React.FC = () => {
   const { isOpen, onToggle } = useDisclosure();
+  const { user } = useAuth();
 
   return (
     <Box w="100%">
@@ -81,10 +79,8 @@ const Nav: React.FC<NavType> = ({ session }) => {
           direction={"row"}
           spacing={6}
         >
-          {session ? (
-            <>
-              <Signout />
-            </>
+          {user ? (
+            <Signout />
           ) : (
             <>
               <LoginForm />

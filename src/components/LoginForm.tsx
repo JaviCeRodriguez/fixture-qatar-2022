@@ -12,22 +12,11 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { supabase } from "../utils/supabaseClient";
+import { useAuth } from "../contexts/AuthContext";
 
 const LoginForm: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const signInWithEmail = async (values: {
-    email: string;
-    password: string;
-  }) => {
-    // @ts-ignore
-    const { user, session, error } = await supabase.auth.signInWithPassword({
-      email: values.email,
-      password: values.password,
-    });
-
-    onClose();
-  };
+  const { signInPassword } = useAuth();
 
   return (
     <>
@@ -42,7 +31,10 @@ const LoginForm: React.FC = () => {
                 email: "",
                 password: "",
               }}
-              onSubmit={signInWithEmail}
+              onSubmit={(values) => {
+                signInPassword(values);
+                onClose();
+              }}
             >
               {({ handleSubmit, handleChange, handleBlur, values }) => (
                 <form onSubmit={handleSubmit}>

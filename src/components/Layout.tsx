@@ -1,15 +1,15 @@
 import React from "react";
 import { Box, Container, HStack, Spinner } from "@chakra-ui/react";
 import Nav from "./Nav";
-import { Session } from "@supabase/supabase-js";
+import { useAuth } from "../contexts/AuthContext";
 
 interface LayoutType {
   children: React.ReactNode;
-  session: Session | null;
-  loading: boolean;
 }
 
-const Layout: React.FC<LayoutType> = ({ children, session, loading }) => {
+const Layout: React.FC<LayoutType> = ({ children }) => {
+  const { loading } = useAuth();
+
   return (
     <Box w="100vw">
       <Container
@@ -21,7 +21,7 @@ const Layout: React.FC<LayoutType> = ({ children, session, loading }) => {
       >
         {!loading ? (
           <>
-            <Nav session={session} />
+            <Nav />
             {children}
           </>
         ) : (

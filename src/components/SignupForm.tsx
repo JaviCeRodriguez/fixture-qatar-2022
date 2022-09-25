@@ -11,21 +11,11 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { supabase } from "../utils/supabaseClient";
+import { useAuth } from "../contexts/AuthContext";
 
 const SignupForm: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const signUpWithEmail = async (values: {
-    email: string;
-    password: string;
-  }) => {
-    // @ts-ignore
-    const { user, session, error } = await supabase.auth.signUp({
-      email: values.email,
-      password: values.password,
-    });
-  };
+  const { signOut } = useAuth();
 
   return (
     <>
@@ -40,7 +30,10 @@ const SignupForm: React.FC = () => {
                 email: "",
                 password: "",
               }}
-              onSubmit={signUpWithEmail}
+              onSubmit={(values) => {
+                signOut(values);
+                onClose();
+              }}
             >
               {({ handleSubmit, handleChange, handleBlur, values }) => (
                 <form onSubmit={handleSubmit}>
